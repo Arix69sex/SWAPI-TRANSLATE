@@ -1,0 +1,20 @@
+{
+  "name": "swapi-translate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.7.7",
+    "jsonschema": "^1.4.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "serverless-openapi-documentation": "^0.4.0"
+  }
+}

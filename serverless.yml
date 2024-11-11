@@ -1,0 +1,71 @@
+service: swapi-translate
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  memorySize: 256
+  timeout: 28
+  environment:
+    DYNAMODB_TABLE: PersonajesTable
+  logs:
+    restApi: true
+    lambda: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:PutItem
+      Resource:
+        - arn:aws:dynamodb:us-east-1:864981738515:table/PersonajesTable
+    - Effect: Allow
+      Action: 
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "*"
+plugins:
+  - serverless-openapi-documentation
+
+custom:
+  documentation:
+    version: '1'
+    title: 'My API'
+    description: 'This is my API'
+    models: {}
+
+functions:
+  createCharacter:
+    handler: src/create-character.handler
+    events:
+      - http:
+          path: characters
+          method: post
+  getCharacters:
+    handler: src/get-characters.handler
+    events:
+      - http:
+          path: characters
+          method: get
+
+resources:
+  Resources:
+    PersonajesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+package:
+  include:
+    - src/**
+    - lib/**
